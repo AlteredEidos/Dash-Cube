@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] ParticleSystem jump;
     [SerializeField] ParticleSystem death;
     Rigidbody2D rB;
+    GameManager gM;
+    public GameObject sprite;
 
     public bool isDead;
     [SerializeField] float jumpForce;
@@ -15,6 +17,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rB = GetComponent<Rigidbody2D>();
+        gM = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
     }
 
     void Update()
@@ -25,6 +28,8 @@ public class PlayerController : MonoBehaviour
             rB.velocity = Vector2.zero;
             rB.AddForce(new Vector2 (0, jumpForce), ForceMode2D.Impulse);
         }
+
+        sprite.transform.rotation = Quaternion.Euler(0,0,rB.velocity.y * 3);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -48,5 +53,6 @@ public class PlayerController : MonoBehaviour
     {
         death.Play();
         Destroy(gameObject, 0.1f);
+        gM.gameOver = true;
     }
 }
